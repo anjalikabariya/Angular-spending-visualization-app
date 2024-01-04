@@ -1,0 +1,42 @@
+<h1 style="text-align: center">Welcome to My Spending App</h1>
+<ngx-charts-line-chart
+  [scheme]="colorScheme"
+  [results]="chartData"
+  [xAxis]="showXAxis"
+  [yAxis]="showYAxis"
+  [legend]="showLegend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  >
+  <!-- [yAxisTickFormatting]="yAxisTickFormatting" -->
+  
+  <!-- Update the y-axis label to include the currency symbol -->
+  <ng-container *ngIf="chartData && chartData[0]?.series && chartData[0].series.length">
+    <ng-template #tooltipTemplate let-model="model">
+      {{ model.value.formattedValue }}
+    </ng-template>
+    <ng-container *ngFor="let series of chartData[0]?.series; let i = index">
+      <ng-container [ngTemplateOutlet]="tooltipTemplate" [ngTemplateOutletContext]="{ model: series }"></ng-container>
+    </ng-container>
+  </ng-container>
+
+</ngx-charts-line-chart>
+
+<div style="text-align: center">
+  <label for="timeFrame">Time Frame:</label>
+  <select id="timeFrame" [(ngModel)]="timeFrame" (change)="onSelectionChange()">
+    <option *ngFor="let frame of timeFrames" [ngValue]="frame">{{ frame }}</option>
+  </select>
+
+  <label for="range">Range:</label>
+  <select id="range" [(ngModel)]="selectedRange" (change)="onSelectionChange()">
+    <option *ngFor="let range of rangeOptions" [value]="range">{{ range }}</option>
+  </select>
+
+  <label for="currency">Currency:</label>
+  <select id="currency" [(ngModel)]="selectedCurrency" (change)="onSelectionChange()">
+    <option *ngFor="let currency of currencies" [value]="currency.currency">{{ currency.currency }}</option>
+  </select>
+</div>
